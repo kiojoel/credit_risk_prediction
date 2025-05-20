@@ -24,5 +24,18 @@ def predict_api():
   else:
     return jsonify({'prediction':'The person is not likely to default on the loan'})
 
+
+@app.route('/predict',methods=['POST'])
+def predict():
+  data=[float(x) for x in request.form.values()]
+  print(data)
+  new_data=scaler.transform(np.array(data).reshape(1,-1))
+  prediction=model.predict(new_data)
+  output=prediction[0]
+  if output==1:
+    return render_template('home.html',prediction_text='The person is likely to default on the loan')
+  else:
+    return render_template('home.html',prediction_text='The person is not likely to default on the loan')
+
 if __name__=="__main__":
   app.run(debug=True)
